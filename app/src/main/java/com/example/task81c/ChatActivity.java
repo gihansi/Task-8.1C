@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -48,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessageToBot(String userMessage) {
-        String url = "http://192.168.1.100:5000/chat";
+        String url = "http://10.0.2.2:5000/chat";
 
         StringRequest postRequest = new StringRequest(
                 Request.Method.POST,
@@ -75,6 +76,11 @@ public class ChatActivity extends AppCompatActivity {
             }
         };
 
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                100000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(postRequest);
     }
@@ -82,7 +88,7 @@ public class ChatActivity extends AppCompatActivity {
     private void addUserMessage(String message) {
         TextView textView = new TextView(this);
         textView.setText("You: " + message);
-        textView.setBackgroundColor(0xFFD0F0C0); // light green
+        textView.setBackgroundColor(0xFFD0F0C0);
         textView.setPadding(16, 8, 16, 8);
         messageContainer.addView(textView);
     }
@@ -90,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
     private void addBotMessage(String message) {
         TextView textView = new TextView(this);
         textView.setText("Bot: " + message);
-        textView.setBackgroundColor(0xFFE0E0E0); // light gray
+        textView.setBackgroundColor(0xFFE0E0E0);
         textView.setPadding(16, 8, 16, 8);
         messageContainer.addView(textView);
     }
